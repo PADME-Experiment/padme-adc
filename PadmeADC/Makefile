@@ -22,12 +22,12 @@ OBJ =	$(addprefix $(ODIR)/,$(notdir $(SRC:.c=.o)))
 DEPS = $(INC) Makefile
 
 CC	=	gcc
-CFLAGS	=	-fPIC -DLINUX -O2 -g -Wall -I$(IDIR) -I/home/pi/CAEN/include
+CFLAGS	=	-fPIC -DLINUX -O2 -g -Wall -I$(IDIR) -I$(CAENDIR)/include
 # Use these for better debug
 #CC	=	g++
-#CFLAGS	=	-DLINUX -O0 -g -Wall -I$(IDIR)
+#CFLAGS	=	-DLINUX -O0 -g -Wall -I$(IDIR) -I$(CAENDIR)/include
 
-LIBS	=	-L/home/pi/CAEN/lib -lCAENDigitizer -lm
+LIBS	=	-L$(CAENDIR)/lib -lCAENDigitizer -lm
 
 #########################################################################
 
