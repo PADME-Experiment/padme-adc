@@ -79,10 +79,12 @@ typedef struct config_s {
   // Serial number of board connected to this process (obtained during initialization)
   uint32_t board_sn;
 
-  // DB id of node where this process is running
-  int node_id;
-
-  // Board optical connection info (port and slot of A3818 board)
+  // Connect mode for this board. Can be OPTICAL or USB
+  char connect_mode[8];
+  
+  // Board connection info
+  // OPTICAL: link is the port on the A3818 board, slot gives board position on optical chain
+  // USB: link is the USB channel used for the ADC module, slot is ignored)
   int conet2_link;
   int conet2_slot;
 

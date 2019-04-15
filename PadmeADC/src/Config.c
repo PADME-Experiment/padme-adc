@@ -65,10 +65,10 @@ int reset_config()
 
   Config->board_sn = 0; // Default to dummy board serial number
 
-  // Use board_id as default to set connection info
-  Config->node_id = -1;
-  Config->conet2_link = -1;
-  Config->conet2_slot = -1;
+  // board_id as default to set connection info
+  strcpy(Config->connect_mode,"USB"); // Default is USB connection
+  Config->conet2_link = 0;
+  Config->conet2_slot = 0; // ignored for USB
 
   Config->startdaq_mode = 0; // Default to SW controlled start/stop
 
@@ -324,13 +324,6 @@ int read_config(char *cfgfile)
 	  } else {
 	    printf("WARNING - board_id set to %d, must be < %d\n",v,MAX_N_BOARDS);
 	  }
-	} else {
-	  printf("WARNING - Could not parse value %s to number in line:\n%s\n",value,line);
-	}
-      } else if ( strcmp(param,"node_id")==0 ) {
-	if ( sscanf(value,"%d",&v) ) {
-	  Config->node_id = v;
-	  printf("Parameter %s set to %d\n",param,v);
 	} else {
 	  printf("WARNING - Could not parse value %s to number in line:\n%s\n",value,line);
 	}
@@ -662,7 +655,8 @@ int print_config(){
   }
 
   printf("board_id\t\t%d\t\tboard ID\n",Config->board_id);
-  printf("node_id\t\t\t%d\t\tDB id of node running the process\n",Config->node_id);
+  
+  printf("conect_mode\t\t%s\t\tADC module connection mode (USB or OPTICAL)\n",Config->connect_mode);
   printf("conet2_link\t\t%d\t\tCONET2 link\n",Config->conet2_link);
   printf("conet2_slot\t\t%d\t\tCONET2 slot\n",Config->conet2_slot);
 

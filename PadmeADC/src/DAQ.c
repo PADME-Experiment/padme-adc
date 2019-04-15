@@ -32,23 +32,18 @@ int DAQ_connect ()
   CAEN_DGTZ_ErrorCode ret;
   CAEN_DGTZ_BoardInfo_t boardInfo;
   
-  printf("- Connecting to CAEN digitizer board %d via USB interface\n",Config->board_id);
-
   // Open connection to digitizer and initialize Handle global variable
-  //ret = CAEN_DGTZ_OpenDigitizer(CAEN_DGTZ_OpticalLink,linkNum,conetNode,0,&Handle);
-  // Connect to first device on USB link
-  int i;
-  int found = 0;
-  for(i=0;i<32;i++) {
-    printf("Testing USB channel %d\n",i);
-    ret = CAEN_DGTZ_OpenDigitizer(CAEN_DGTZ_USB,i,0,0,&Handle);
-    if (ret == CAEN_DGTZ_Success) {
-      printf("Digitizer found on USB channel %d\n",i);
-      found = 1;
-      break;
-    }
+  ret = 0;
+  if ( strcmp(Config->connect_mode,"USB")==0 ) {
+    // Connect to first device on USB link (use Conet2 link as USB address, ignore conet2_node)
+    printf("- Connecting to CAEN digitizer board %d via USB channel %d\n",Config->board_id,Config->conet2_link);
+    ret = CAEN_DGTZ_OpenDigitizer(CAEN_DGTZ_USB,Config->conet2_link,0,0,&Handle);
+  } else if ( strcmp(Config->connect_mode,"OPTICAL")==0 ) {
+    // Connect to required link/slot of A3818 optical board
+    printf("- Connecting to CAEN digitizer board %d via A3818 optical board on link %d slot %d\n",Config->board_id,Config->conet2_link,Config->conet2_slot);
+    ret = CAEN_DGTZ_OpenDigitizer(CAEN_DGTZ_OpticalLink,Config->conet2_link,Config->conet2_slot,0,&Handle);
   }
-  if (! found) {
+  if (ret != CAEN_DGTZ_Success) {
     printf("Unable to connect to digitizer. Error code: %d\n",ret);
     return 1;
   }
